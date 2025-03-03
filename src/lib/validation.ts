@@ -20,12 +20,22 @@ export const personalInfoSchema = z.object({
       (file) => !file || file.size <= 1024 * 1024 * 4,
       "File must be less than or equal to 4MB",
     ),
-    firstName: optionalString,
-    lastName: optionalString,
-    jobTitle: optionalString,
-    city: optionalString,
-    country: optionalString,
-    phone: optionalString,
-    email: optionalString
+  firstName: optionalString,
+  lastName: optionalString,
+  jobTitle: optionalString,
+  city: optionalString,
+  country: optionalString,
+  phone: optionalString,
+  email: optionalString,
 });
 export type PersonalInfoValues = z.infer<typeof personalInfoSchema>;
+
+export const resumeSchema = z.object({
+  ...generalInfoSchema.shape,
+  ...personalInfoSchema.shape,
+});
+
+export type ResumeValues = Omit<z.infer<typeof resumeSchema>,"photo"> & {
+    id?: string;
+    photo?: File | string | null;
+};
