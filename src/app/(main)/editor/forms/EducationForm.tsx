@@ -30,7 +30,7 @@ const EducationForm = ({ resumeData, setResumeData }: EditorFormProps) => {
       setResumeData({
         ...resumeData,
         educations:
-          values.educations?.filter((exp) => exp !== undefined) || [],
+          values.educations?.filter((edu) => edu !== undefined) || [],
       });
     });
     return unsubscribe;

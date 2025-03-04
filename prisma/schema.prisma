@@ -20,17 +20,19 @@ model Resume {
   description String?
   photoUrl    String?
   colorHex    String  @default("#000000")
-  borderStyle String @default("squircle")
-  summary String?
-  firstName String?
-  lastName String?
-  jobTitle String?
-  city String?
-  country String?
-  phone String?
-  email String?
+  borderStyle String  @default("squircle")
+  summary     String?
+  firstName   String?
+  lastName    String?
+  jobTitle    String?
+  city        String?
+  country     String?
+  phone       String?
+  email       String?
+
   workExperiences WorkExperience[]
-  educations Education[]
+  educations      Education[]
+  skills          String[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -39,34 +41,34 @@ model Resume {
 }
 
 model WorkExperience {
-  id          String  @id @default(cuid())
-  position String?
-  company String?
-  startDate DateTime?
-  endDate DateTime?
+  id          String    @id @default(cuid())
+  position    String?
+  company     String?
+  startDate   DateTime?
+  endDate     DateTime?
   description String?
 
   resumeId String
-  resume Resume @relation(fields: [resumeId], references: [id])
+  resume   Resume @relation(fields: [resumeId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-   @@map("work_experiences")
+  @@map("work_experiences")
 }
 
 model Education {
-  id          String  @id @default(cuid())
-  degree String?
-  school String?
+  id        String    @id @default(cuid())
+  degree    String?
+  school    String?
   startDate DateTime?
-  endDate DateTime?
+  endDate   DateTime?
 
   resumeId String
-  resume Resume @relation(fields: [resumeId], references: [id])
+  resume   Resume @relation(fields: [resumeId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-   @@map("educations ")
+  @@map("educations ")
 }
