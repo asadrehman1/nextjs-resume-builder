@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { formatDate } from "date-fns";
 import { Badge } from "./ui/badge";
+import { BorderStyles } from "@/app/(main)/editor/BorderStyleButton";
 
 interface ResumePreviewProps {
   resumeData: ResumeValues;
@@ -31,8 +32,8 @@ const ResumePreview = ({ resumeData, className }: ResumePreviewProps) => {
         <PersonalInfoHeader resumeData={resumeData} />
         <SummarySection resumeData={resumeData} />
         <WorkExperienceSection resumeData={resumeData} />
-        <EducationSection resumeData={resumeData}/>
-        <SkillSection resumeData={resumeData}/>
+        <EducationSection resumeData={resumeData} />
+        <SkillSection resumeData={resumeData} />
       </div>
     </div>
   );
@@ -43,8 +44,18 @@ interface ResumeSectionProps {
 }
 
 const PersonalInfoHeader = ({ resumeData }: ResumeSectionProps) => {
-  const { photo, firstName, lastName, jobTitle, city, country, phone, email } =
-    resumeData;
+  const {
+    photo,
+    firstName,
+    lastName,
+    jobTitle,
+    city,
+    country,
+    phone,
+    email,
+    colorHex,
+    borderStyle,
+  } = resumeData;
   const [photoSrc, setPhotoSrc] = useState(photo instanceof File ? "" : photo);
 
   useEffect(() => {
@@ -64,14 +75,34 @@ const PersonalInfoHeader = ({ resumeData }: ResumeSectionProps) => {
           height={100}
           alt="Author photo"
           className="aspect-square object-cover"
+          style={{
+            borderRadius:
+              borderStyle === BorderStyles.SQUARE
+                ? "0px"
+                : borderStyle === BorderStyles.CIRCLE
+                  ? "9999px"
+                  : "10%",
+          }}
         />
       )}
       <div className="space-y-2.5">
         <div className="space-y-1">
-          <p className="text-3xl font-bold">
+          <p
+            className="text-3xl font-bold"
+            style={{
+              color: colorHex,
+            }}
+          >
             {firstName} {lastName}
           </p>
-          <p className="font-medium">{jobTitle}</p>
+          <p
+            className="font-medium"
+            style={{
+              color: colorHex,
+            }}
+          >
+            {jobTitle}
+          </p>
         </div>
         <p className="text-xs text-gray-500">
           {city}
@@ -86,15 +117,27 @@ const PersonalInfoHeader = ({ resumeData }: ResumeSectionProps) => {
 };
 
 const SummarySection = ({ resumeData }: ResumeSectionProps) => {
-  const { summary } = resumeData;
+  const { summary, colorHex } = resumeData;
 
   if (!summary) return null;
 
   return (
     <>
-      <hr className="border-2" />
+      <hr
+        className="border-2"
+        style={{
+          borderColor: colorHex,
+        }}
+      />
       <div className="break-inside-avoid space-y-3">
-        <p className="text-lg font-semibold">Professional profile</p>
+        <p
+          className="text-lg font-semibold"
+          style={{
+            color: colorHex,
+          }}
+        >
+          Professional profile
+        </p>
         <div className="whitespace-pre-line text-sm">{summary}</div>
       </div>
     </>
@@ -102,7 +145,7 @@ const SummarySection = ({ resumeData }: ResumeSectionProps) => {
 };
 
 const WorkExperienceSection = ({ resumeData }: ResumeSectionProps) => {
-  const { workExperiences } = resumeData;
+  const { workExperiences, colorHex } = resumeData;
 
   const workExperiencesNotEmpty = workExperiences?.filter(
     (exp) => Object.values(exp).filter(Boolean).length > 0,
@@ -112,12 +155,29 @@ const WorkExperienceSection = ({ resumeData }: ResumeSectionProps) => {
 
   return (
     <>
-      <hr className="border-2" />
+      <hr
+        className="border-2"
+        style={{
+          borderColor: colorHex,
+        }}
+      />
       <div className="space-y-3">
-        <p className="text-lg font-semibold">Work experience</p>
+        <p
+          className="text-lg font-semibold"
+          style={{
+            color: colorHex,
+          }}
+        >
+          Work experience
+        </p>
         {workExperiencesNotEmpty.map((exp, index) => (
           <div key={index} className="break-inside-avoid space-y-1">
-            <div className="flex items-center justify-between text-sm font-semibold">
+            <div
+              style={{
+                color: colorHex,
+              }}
+              className="flex items-center justify-between text-sm font-semibold"
+            >
               <span>{exp.position}</span>
               {exp.startDate && (
                 <span>
@@ -136,7 +196,7 @@ const WorkExperienceSection = ({ resumeData }: ResumeSectionProps) => {
 };
 
 const EducationSection = ({ resumeData }: ResumeSectionProps) => {
-  const { educations } = resumeData;
+  const { educations, colorHex } = resumeData;
 
   const educationsNotEmpty = educations?.filter(
     (edu) => Object.values(edu).filter(Boolean).length > 0,
@@ -148,16 +208,25 @@ const EducationSection = ({ resumeData }: ResumeSectionProps) => {
     <>
       <hr
         className="border-2"
+        style={{
+          borderColor: colorHex,
+        }}
       />
       <div className="space-y-3">
         <p
           className="text-lg font-semibold"
+          style={{
+            color: colorHex,
+          }}
         >
           Education
         </p>
         {educationsNotEmpty.map((edu, index) => (
           <div key={index} className="break-inside-avoid space-y-1">
             <div
+              style={{
+                color: colorHex,
+              }}
               className="flex items-center justify-between text-sm font-semibold"
             >
               <span>{edu.degree}</span>
@@ -174,25 +243,51 @@ const EducationSection = ({ resumeData }: ResumeSectionProps) => {
       </div>
     </>
   );
-}
+};
 
 export const SkillSection = ({ resumeData }: ResumeSectionProps) => {
-  const { skills } = resumeData;
-  if(skills?.length === 0) return null;
+  const { skills, colorHex, borderStyle } = resumeData;
+  if (skills?.length === 0) return null;
 
-  return <>
-    <hr className="border-2"/>
-    <div className="break-inside-avoid space-y-3"></div>
-    <p className="text-lg font-semibold"> Skills</p>
-    <div className="flex break-inside-avoid flex-wrap gap-2">
-      {skills?.map((skill,index) => (
-        <Badge key={index} className="bg-black hover:bg-black text-white rounded-md">
-          {skill}
-        </Badge>
-      ))}
-    </div>
-  </>
-}
-
+  return (
+    <>
+      <hr
+        className="border-2"
+        style={{
+          borderColor: colorHex,
+        }}
+      />
+      <div className="break-inside-avoid space-y-3"></div>
+      <p
+        className="text-lg font-semibold"
+        style={{
+          color: colorHex,
+        }}
+      >
+        {" "}
+        Skills
+      </p>
+      <div className="flex break-inside-avoid flex-wrap gap-2">
+        {skills?.map((skill, index) => (
+          <Badge
+            style={{
+              backgroundColor: colorHex,
+              borderRadius:
+                borderStyle === BorderStyles.SQUARE
+                  ? "0px"
+                  : borderStyle === BorderStyles.CIRCLE
+                    ? "9999px"
+                    : "8px",
+            }}
+            key={index}
+            className="rounded-md bg-black text-white hover:bg-black"
+          >
+            {skill}
+          </Badge>
+        ))}
+      </div>
+    </>
+  );
+};
 
 export default ResumePreview;
